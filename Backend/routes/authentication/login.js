@@ -14,5 +14,5 @@ exports.logIn=async(req,res)=>{
     if(!match) return res.status(400).send("invalid password")
         
     const token=jwt.sign({_id:user._id},JWT_SECRET,{expiresIn:'1h'})
-    return res.send({token})
+    return res.status(200).send({user,token})
 }

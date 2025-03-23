@@ -8,9 +8,10 @@ const { authenticateUser } = require('./middleware/authorization');
 const cookieParser = require('cookie-parser');
 const { getProfile } = require('./routes/authentication/getProfile');
 const { logOut } = require('./routes/authentication/logOut');
-const router = require('./routes/captainRoutes/captainRoutes');
 const captainRouter = require('./routes/captainRoutes/captainRoutes');
+var cors = require('cors')
 
+app.use(cors())
 app.use(express.json());
 app.use(cookieParser())
 
@@ -23,7 +24,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/signup',signUp)
-app.get('/login',logIn)
+app.post('/login',logIn)
 app.get('/profile',authenticateUser,getProfile)
 app.get('/redirect', (req,res)=>{
   res.redirect('/')

@@ -24,11 +24,11 @@ captainRouter.post("/signup",async (req,res)=>{
     })
     await captain.save()
 
-    return res.send(captain);
+    return res.status(201).send(captain);
 })
 
 
-captainRouter.get("/login",async (req,res)=>{
+captainRouter.post("/login",async (req,res)=>{
     const {email,password}=req.body;
 
     const capexists=await captainModel.findOne({email})
@@ -38,11 +38,11 @@ captainRouter.get("/login",async (req,res)=>{
     if(!match) return res.status(400).send("invalid password")
         
     const token=jwt.sign({_id:capexists._id},JWT_SECRET,{expiresIn:'1h'})
-    return res.send({token})
+    return res.send({capexists,token})
 })
 
 captainRouter.get("/profile",authenticateCaptain,async (req,res)=>{
-    res.send(req.captain)
+    res.status(200).send(req.captain)
 })
 
 module.exports= captainRouter
