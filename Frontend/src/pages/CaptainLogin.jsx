@@ -21,7 +21,7 @@ const CaptainLogin = () => {
         if(response.status==200){
           localStorage.setItem('token',response.data.token)
           setcaptainData(response.data.capexists)
-          navigate('/home')
+          navigate('/captain/home')
         }
         setemail("")
         setpassword("")

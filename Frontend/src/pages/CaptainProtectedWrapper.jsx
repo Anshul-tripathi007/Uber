@@ -7,17 +7,19 @@ const CaptainProtectedWrapper = ({children}) => {
     const navigate=useNavigate()
     const {URL}=useContext(CaptainDataContext)
     
-    useEffect(async () => {
+    useEffect(() => {
         const token =localStorage.getItem('token')
         if(!token) navigate('/captain/login')
         
-        const response =await axios.get(`${URL}/captain/profile`, {
+        async ()=>{
+          const response =await axios.get(`${URL}/captain/profile`, {
             headers:{
                 authorization : `${token}`
             }
         })
 
         if(response.status!=200) navigate('/captain/login')
+        }
     },[])
     
   return (
