@@ -11,6 +11,7 @@ module.exports.authenticateUser=async (req,res,next)=>{
         var decoded = jwt.verify(token,JWT_SECRET)
         const user=await User.findById(decoded._id)
         req.user=user
+        console.log("req user = ", req.user ,user)
         return next()
     }
     catch(err){

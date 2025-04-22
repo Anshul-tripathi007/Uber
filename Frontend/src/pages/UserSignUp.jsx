@@ -17,10 +17,8 @@ const UserSignUp = () => {
             email:`${email}`,
             password:`${password}`
         }
-        console.log(`${URL}/user/signup`)
         const response = await axios.post(`${URL}/signup`,newuser)
         if(response.status==201){
-            const user=response.data.user
             navigate("/user/login")
         }
         setname("")
@@ -29,21 +27,67 @@ const UserSignUp = () => {
     }
 
   return (
-    <div className='flex flex-col justify-items-center p-10 h-screen'>
-      <div>
-      <form onSubmit={(e)=>submitHandler(e)}>
-      <h2 className='p-2 text-xl'>Enter Name</h2>
-      <input className='p-2'required type="text" placeholder='type here' value={name} onChange={(e)=>{setname(e.target.value)}}/>
-        <h2 className='p-2 text-xl'>Enter Email</h2>
-        <input className='p-2'required type="email" placeholder='example@abc.com' value={email} onChange={(e)=>{setemail(e.target.value)}}/>
-        <h2 className='p-2 text-xl'>Enter Password</h2>
-        <input className='p-2' required type="current-password" placeholder='*****'value={password} onChange={(e)=>{setpassword(e.target.value)}}/>
-        <div><button className='border border-black'> Sign Up</button></div>
-        <Link to='/user/login' className='text-blue-500'>Log In</Link>
-      </form>
-      <div className='self-end'><Link to='/captain/login'><button className='border border-black mt-2'>Captain LogIn</button></Link></div>
+    <div>
+      <div className='p-7 h-screen flex flex-col justify-between'>
+        <div>
+          <img className='w-16 mb-10' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYQy-OIkA6In0fTvVwZADPmFFibjmszu2A0g&s" alt="" />
+
+          <form onSubmit={(e) => {
+            submitHandler(e)
+          }}>
+
+            <h3 className='text-lg w-1/2  font-medium mb-2'>What's your name</h3>
+            <div className='flex gap-4 mb-7'>
+              <input
+                required
+                className='bg-[#eeeeee] rounded-lg px-4 py-2 border  text-lg placeholder:text-base w-full'
+                type="text"
+                placeholder='Name'
+                value={name}
+                onChange={(e) => {
+                  setname(e.target.value)
+                }}
+              />
+          
+            </div>
+
+            <h3 className='text-lg font-medium mb-2'>What's your email</h3>
+            <input
+              required
+              value={email}
+              onChange={(e) => {
+                setemail(e.target.value)
+              }}
+              className='bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
+              type="email"
+              placeholder='email@example.com'
+            />
+
+            <h3 className='text-lg font-medium mb-2'>Enter Password</h3>
+
+            <input
+              className='bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
+              value={password}
+              onChange={(e) => {
+                setpassword(e.target.value)
+              }}
+              required type="password"
+              placeholder='password'
+            />
+
+            <button
+              className='bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
+            >Create account</button>
+
+          </form>
+          <p className='text-center'>Already have a account? <Link to='/user/login' className='text-blue-600'>Login here</Link></p>
+        </div>
+        <div>
+          <p className='text-[10px] leading-tight'>This site is protected by reCAPTCHA and the <span className='underline'>Google Privacy
+            Policy</span> and <span className='underline'>Terms of Service apply</span>.</p>
+        </div>
       </div>
-    </div>
+    </div >
   )
 }
 

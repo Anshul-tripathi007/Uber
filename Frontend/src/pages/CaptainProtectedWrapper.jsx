@@ -5,21 +5,29 @@ import { CaptainDataContext } from '../context/CaptainContext'
 
 const CaptainProtectedWrapper = ({children}) => {
     const navigate=useNavigate()
-    const {URL}=useContext(CaptainDataContext)
+    const {value}=useContext(CaptainDataContext)
     
     useEffect(() => {
         const token =localStorage.getItem('token')
         if(!token) navigate('/captain/login')
         
-        async ()=>{
-          const response =await axios.get(`${URL}/captain/profile`, {
-            headers:{
-                authorization : `${token}`
-            }
-        })
+          async function checkAuthorization() {
+            try {
+              const response = await axios.get(`${value.URL}/captain/profile`, {
+                headers: {
+                  authorization: token,
+                },
+              });
 
-        if(response.status!=200) navigate('/captain/login')
-        }
+              value.setcaptainData(response.data)
+
+            } catch (err) {
+              console.log("Error in authorization ");
+              navigate("/captain/login");
+              localStorage.removeItem("token");
+            }
+          }
+          checkAuthorization();
     },[])
     
   return (

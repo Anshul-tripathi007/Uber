@@ -1,17 +1,61 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import CaptainDetails from "../components/CaptainDetails";
 import { Link } from "react-router-dom";
 import RidePopUp from "../components/RidePopUp";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ConfirmRidePopUp from "../components/ConfirmRidePopUp";
+import { SocketContext } from "../context/SocketContext";
+import { CaptainDataContext } from "../context/CaptainContext";
+
 
 const CaptainHome = () => {
-  const [ridePopupPanel, setridePopupPanel] = useState(true);
+
+  const [ridePopupPanel, setridePopupPanel] = useState(false);
   const [confirmRidePanel, setconfirmRidePanel] = useState(false);
+  const[ride,setRide]=useState({})
   const ridePopupPanelRef = useRef(null);
   const confirmRidePanelRef = useRef(null);
+  const { socket } = useContext(SocketContext);
+  const { value} = useContext(CaptainDataContext);
 
+  socket.on("new-ride", (data) => {
+    console.log("new ride available",data)
+    setridePopupPanel(true);
+    console.log(data)
+    setRide(data);
+  })
+
+  useEffect(() => {
+
+    const updateLocation = () => {
+      if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition((position) => {
+
+              socket.emit("update-location-captain", {
+                  userId: value.captainData._id,
+                  location: {
+                      ltd: position.coords.latitude,
+                      lng: position.coords.longitude
+                  }
+              })
+          })
+      }
+  }
+  updateLocation()
+  // return () => clearInterval(locationInterval)
+
+  },[])
+
+  useEffect(() => {
+    if(!value.captainData) return;
+    socket.emit("join", {
+      userId: value.captainData._id,
+      userType: "captain",
+    })
+  }, [value.captainData])
+  
+  
   useGSAP(
     function () {
       if (ridePopupPanel) {
@@ -72,6 +116,7 @@ const CaptainHome = () => {
         className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-10 pt-12"
       >
         <RidePopUp
+          ride={ride}
           setridePopupPanel={setridePopupPanel}
           setconfirmRidePanel={setconfirmRidePanel}
         />
@@ -81,6 +126,7 @@ const CaptainHome = () => {
         className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-10 pt-12"
       >
         <ConfirmRidePopUp
+          ride={ride}
           setconfirmRidePanel={setconfirmRidePanel}
           setridePopupPanel={setridePopupPanel}
         />

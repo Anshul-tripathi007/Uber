@@ -1,6 +1,26 @@
 import React from "react";
+import axios from "axios";
 
 const RidePopUp = (props) => {
+
+  const confirmRide = async () => {
+    const response= await axios.post(
+      `http://localhost:3000/ride/confirm`,
+      {
+        rideId: props.ride._id,
+      },
+      {
+        headers: {
+          authorization: localStorage.getItem("token"),
+        },
+      }
+    );
+    if(response.status===200){
+      props.setconfirmRidePanel(true)
+      props.setridePopupPanel(false)
+    }
+  }
+
   return (
     <div>
       <h5
@@ -19,7 +39,7 @@ const RidePopUp = (props) => {
             src="https://i.pinimg.com/236x/af/26/28/af26280b0ca305be47df0b799ed1b12b.jpg"
             alt=""
           />
-          <h2 className="text-lg font-medium">Customer Name</h2>
+          <h2 className="text-lg font-medium">{props.ride.user?.name}</h2>
         </div>
         <h5 className="text-lg font-semibold">2.2 KM</h5>
       </div>
@@ -46,7 +66,7 @@ const RidePopUp = (props) => {
           <div className="flex items-center gap-5 p-3">
             <i className="ri-currency-line"></i>
             <div>
-              <h3 className="text-lg font-medium">₹189 </h3>
+              <h3 className="text-lg font-medium">₹{props.ride?.fare} </h3>
               <p className="text-sm -mt-1 text-gray-600">Cash Cash</p>
             </div>
           </div>
@@ -54,8 +74,7 @@ const RidePopUp = (props) => {
         <div className="mt-5 w-full ">
           <button
             onClick={() => {
-                props.setconfirmRidePanel(true)
-                props.setridePopupPanel(false)
+                confirmRide()
             }}
             className=" bg-green-600 w-full text-white font-semibold p-2 px-10 rounded-lg"
           >

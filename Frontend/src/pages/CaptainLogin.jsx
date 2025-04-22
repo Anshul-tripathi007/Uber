@@ -6,7 +6,7 @@ import { CaptainDataContext } from '../context/CaptainContext'
 const CaptainLogin = () => {
     const [email, setemail] = useState("")
     const [password, setpassword] = useState("")
-    const {URL,setcaptainData}=useContext(CaptainDataContext)
+    const {value}=useContext(CaptainDataContext)
     const navigate=useNavigate()
 
     const submitHandler= async (e)=>{
@@ -17,10 +17,10 @@ const CaptainLogin = () => {
       }
 
       try{
-        const response= await axios.post(`${URL}/captain/login`,capData)
+        const response= await axios.post(`${value.URL}/captain/login`,capData)
         if(response.status==200){
           localStorage.setItem('token',response.data.token)
-          setcaptainData(response.data.capexists)
+          value.setcaptainData(response.data.capexists)
           navigate('/captain/home')
         }
         setemail("")
@@ -32,20 +32,50 @@ const CaptainLogin = () => {
     }
 
   return (
-    <div>
-      <div className='flex flex-col justify-items-center p-10 h-screen'>
+    <div className='p-7 h-screen flex flex-col justify-between'>
       <div>
-      <form onSubmit={(e)=>submitHandler(e)}>
-        <h2 className='p-2 text-xl'>Enter Email</h2>
-        <input className='p-2'required type="email" placeholder='example@abc.com' value={email} onChange={(e)=>{setemail(e.target.value)}}/>
-        <h2 className='p-2 text-xl'>Enter Password</h2>
-        <input className='p-2' required type="current-password" placeholder='*****'value={password} onChange={(e)=>{setpassword(e.target.value)}}/>
-        <div><button className='border border-black'> Log In</button></div>
-        <Link to='/captain/signup' className='text-blue-500'>Create a new account</Link>
-      </form>
-       <div className='self-end'><Link to='/user/login'><button className='border border-black mt-2'>User LogIn</button></Link></div>
+        <img className='w-20 mb-3' src="https://www.svgrepo.com/show/505031/uber-driver.svg" alt="" />
+
+        <form onSubmit={(e) => {
+          submitHandler(e)
+        }}>
+          <h3 className='text-lg font-medium mb-2'>What's your email</h3>
+          <input
+            required
+            value={email}
+            onChange={(e) => {
+              setemail(e.target.value)
+            }}
+            className='bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
+            type="email"
+            placeholder='email@example.com'
+          />
+
+          <h3 className='text-lg font-medium mb-2'>Enter Password</h3>
+
+          <input
+            className='bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
+            value={password}
+            onChange={(e) => {
+              setpassword(e.target.value)
+            }}
+            required type="password"
+            placeholder='password'
+          />
+
+          <button
+            className='bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
+          >Login</button>
+
+        </form>
+        <p className='text-center'>Join a fleet? <Link to='/captain/signup' className='text-blue-600'>Register as a Captain</Link></p>
       </div>
-    </div>
+      <div>
+        <Link
+          to='/user/login'
+          className='bg-[#d5622d] flex items-center justify-center text-white font-semibold mb-5 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
+        >Sign in as User</Link>
+      </div>
     </div>
   )
 }
